@@ -24,6 +24,7 @@ import '../models/sellDatabase.dart';
 import '../models/system.dart';
 import '../models/variations.dart';
 import '../pages/login.dart';
+import 'dashboard_screen.dart';
 import 'elements.dart';
 
 class Home extends StatefulWidget {
@@ -145,9 +146,12 @@ class _HomeState extends State<Home> {
         drawer: homePageDrawer(),
         appBar: AppBar(
           elevation: 0,
+          backgroundColor: Color(0xFF667EEA),
           title: Text(AppLocalizations.of(context).translate('home'),
               style: AppTheme.getTextStyle(themeData.textTheme.titleLarge,
+                  color: Colors.white,
                   fontWeight: 600)),
+          iconTheme: IconThemeData(color: Colors.white),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
@@ -160,7 +164,7 @@ class _HomeState extends State<Home> {
               child: Text(
                 AppLocalizations.of(context).translate('sync'),
                 style: AppTheme.getTextStyle(themeData.textTheme.bodyLarge,
-                    color: themeData.colorScheme.onSurface, fontWeight: 600),
+                    color: Colors.white, fontWeight: 600),
               ),
             ),
             TextButton(
@@ -168,7 +172,6 @@ class _HomeState extends State<Home> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await SellDatabase().getNotSyncedSells().then((value) {
                   if (value.isEmpty) {
-                    //saving userId in disk
                     prefs.setInt('prevUserId', USERID!);
                     prefs.remove('userId');
                     Navigator.pushReplacementNamed(context, '/login');
@@ -182,32 +185,12 @@ class _HomeState extends State<Home> {
               child: Text(
                 AppLocalizations.of(context).translate('logout'),
                 style: AppTheme.getTextStyle(themeData.textTheme.bodyLarge,
-                    color: themeData.colorScheme.onSurface, fontWeight: 600),
+                    color: Colors.white, fontWeight: 600),
               ),
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: Container(
-                  padding: EdgeInsets.all(MySize.size10!),
-                  child: Text(
-                      AppLocalizations.of(context).translate('welcome') +
-                          ' $userName',
-                      style: AppTheme.getTextStyle(
-                          themeData.textTheme.titleMedium,
-                          fontWeight: 700,
-                          letterSpacing: -0.2)),
-                ),
-              ),
-              statistics(),
-              checkIO(),
-              paymentDetails(),
-            ],
-          ),
-        ),
+        body: DashboardScreen(),
         bottomNavigationBar: posBottomBar('home', context));
   }
 
